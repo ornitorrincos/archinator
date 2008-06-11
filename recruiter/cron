@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pid=`ps aux | grep recruitbot | grep -v grep | awk '{print $2}'`
+
+echo $pid;
+
+if [ 'x'$pid == 'x' ]; then
+	python /home/flaper87/workspace/recruiter/recruitbot.py
+fi
