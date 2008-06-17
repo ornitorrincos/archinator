@@ -6,11 +6,11 @@
 
 HOST='irc.freenode.net' #The server we want to connect to
 PORT=6667 #The connection port which is usually 6667
-NICK='archin' #The bot's nickname
-PASSWORD='archlinuxesbot' # The nickserv password
+NICK='nickname' #The bot's nickname
+PASSWORD='password' # The nickserv password
 IDENT='prueba'
 REALNAME='prueba'
-OWNERS = ['flaper87', 'angvp'] #The bot owner's nick
+OWNERS = ['owner'] #The bot owner's nick
 CHANNELINIT='#archlinux-es' #The default channel for the bot
 
 
