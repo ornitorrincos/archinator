@@ -18,7 +18,8 @@ import os
 import httplib
 import tarfile
 
-#execute both functions, one downloads the uncompressed tarfile and the other decompresses it
+#Execute both functions, one downloads the uncompressed tarfile and the other
+#decompresses it, remember to delete the temporal directory.
 
 repos= ('core', 'extra', 'community')
 
@@ -59,6 +60,17 @@ class sync(self):
            f.close()
            
 
+#class for searching the package(very simple approach)
+
 class search(self):
     
-    
+    def search(package):
+        for repo in repos:
+            f=open(repo+'.db', 'r')
+            packages=f.read()
+            f.close()
+            
+            for item in packages:
+                if package == item:
+                    return package
+            
