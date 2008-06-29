@@ -21,56 +21,59 @@ import tarfile
 #Execute both functions, one downloads the uncompressed tarfile and the other
 #decompresses it, remember to delete the temporal directory.
 
-repos= ('core', 'extra', 'community')
+repos = ('core', 'extra', 'community')
 
 class sync(self):
     
-    def refresh(repo, mirror):
+    def refresh(self, repo, mirror):
         
-        f = open('./'+repo+'.db.tar.gz')
-        c=httplib.HTTPConnection(mirror)
-        c.request("GET", repo+'/os/i686/'+repo+'.db.tar.gz')
-        r=c.getresponse
+        self.f = open('./'+repo+'.db.tar.gz')
+        self.c=httplib.HTTPConnection(mirror)
+        self.c.request("GET", repo+'/os/i686/'+repo+'.db.tar.gz')
+        self.r=self.c.getresponse
         
-        if r.status == 200:
-            f.write(r.read())
+        if self.r.status == 200:
+            self.f.write(self.r.read())
         
-        c.close()
-        f.close()
+        self.c.close()
+        self.f.close()
     
     
-    def expander(repo):
+    def expander(self, repo):
         
         if tarfile.is_tarfile(repo+'.db.tar.gz') == True:
             
             if os.path.exists('./'+repo) == False:
                 os.path.mkdir('./'+repo)
             
-           tar = tarfile.open(repo+'.db.tar.gz')
-           tar.extractall('./'+repo)
-           tar.close()
+            self.tar = tarfile.open(repo+'.db.tar.gz')
+            self.tar.extractall('./'+repo)
+            self.tar.close()
+            
+            self.wrt = ''
+            
+            for self.dir in os.listdir('./'+repo):
+                self.wrt += dir+'\n'
+            
+            self.f = open(repo+'.db', 'w')
+            self.f.write(self.wrt)
+            self.f.close()
            
-           wrt = ''
-           
-           for dir in os.listdir('./'+repo):
-               wrt += dir+'\n'
-           
-           f = open(repo+'.db', 'w')
-           f.write(wrt)
-           f.close()
-           
+    def cleanup(self, repo):
+        
+        
 
 #class for searching the package(very simple approach)
 
 class search(self):
     
-    def search(package):
-        for repo in repos:
-            f=open(repo+'.db', 'r')
-            packages=f.read()
-            f.close()
+    def search(self, package):
+        for self.repo in repos:
+            self.f=open(self.repo+'.db', 'r')
+            self.packages=self.f.read()
+            self.f.close()
             
-            for item in packages:
-                if package == item:
+            for self.item in self.packages:
+                if package == self.item:
                     return package
             
