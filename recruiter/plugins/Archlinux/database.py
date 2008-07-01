@@ -26,7 +26,7 @@ repos = ('core', 'extra', 'community')
 class sync(self):
     
     def refresh(self, repo, mirror):
-        
+        '''gets database from mirror'''
         self.f = open('./'+repo+'.db.tar.gz')
         self.c=httplib.HTTPConnection(mirror)
         self.c.request("GET", repo+'/os/i686/'+repo+'.db.tar.gz')
@@ -40,7 +40,7 @@ class sync(self):
     
     
     def expander(self, repo):
-        
+        '''compresses and processes the database'''
         if tarfile.is_tarfile(repo+'.db.tar.gz') == True:
             
             if os.path.exists('./'+repo) == False:
@@ -49,6 +49,7 @@ class sync(self):
             self.tar = tarfile.open(repo+'.db.tar.gz')
             self.tar.extractall('./'+repo)
             self.tar.close()
+            os.remove(repo+'.db.tar.gz')
             
             self.wrt = ''
             
@@ -60,14 +61,26 @@ class sync(self):
             self.f.close()
            
     def cleanup(self, repo):
+        '''Cleans the temporary directory'''
+        self.path='./'+repo
+        
+        for self.dir in os.listdir(self.path):
+            for self.file in os.listdir(self.path+self.dir):
+                os.remove(self.path+self.dir+self.file)
+            
+            os.remove(self.path+self.dir)
+        os.remove(self.path)
+        os.remove(repo+'.db')
         
         
 
-#class for searching the package(very simple approach)
 
 class search(self):
     
     def search(self, package):
+        '''search for a package(quick fix, should migrate to sqlite3)'''
+        
+        
         for self.repo in repos:
             self.f=open(self.repo+'.db', 'r')
             self.packages=self.f.read()
