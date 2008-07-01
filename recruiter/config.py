@@ -11,7 +11,7 @@ PASSWORD='password' # The nickserv password
 IDENT='prueba'
 REALNAME='prueba'
 OWNERS = ['owner'] #The bot owner's nick
-CHANNELINIT='#archlinux-es' #The default channel for the bot
+CHANNELINIT='#flaper87' #The default channel for the bot
 
 
 #PLUGINS

@@ -48,38 +48,35 @@ class main:
          
     
     #old pksearch code, here as backup
-    '''def pkSearch( self, package):
+    def findInAur( self, package):
+        
         html = urllib.urlopen('http://aur.archlinux.org/packages.php?setlang=en' +
                               '&do_Search=SeB=nd&L=0&C=0&PP=100&K=' + package).read()
                                
         found = (re.compile('packages.php\?ID=.*?><.*?>(.*?)</span>')).findall(html)
-        
-        i=0
-        list = ""
-        
-        if len(found) < 1:
-            self.bot.sendtext("NO EXISTE EL PAQUETE, QUE QUIERES QUE TE LO CREE TAMBIEN", True)
-            return True
-        
-        list = (" || ").join(found[:12])
 
-        if len(found) > 12:
-            list += " 01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE HAY MÁS DE 12 RESULTADOS***"
-    
-        self.bot.sendtext(list, True)'''
+        return found
         
     
     def pkSearch(self, package):
-        resp = False
-        
+        resp = []
+
         for repo in repos:
             resp = database.search().search(repo, package)
             if resp:
                 break
-                
-        print resp
-        msg = (" || ").join(resp)
-        self.bot.sendtext(repo+': '+msg, True)
+
+        for pkg in self.findInAur(package):
+            resp.append(pkg)
+            
+        if not resp:
+            msg = "NO EXISTE EL PAQUETE, QUE QUIERES QUE TE LO CREE TAMBIEN"
+        else:
+            msg = (" || ").join(resp[:12])
+            if len(resp) > 12:
+                msg += " 01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE HAY MÁS DE 12 RESULTADOS***"
+            
+        self.bot.sendtext( msg, True)
         
     
     def __doc__( self ):
