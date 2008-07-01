@@ -5,7 +5,7 @@ import urllib
 import feedparser
 import database
 
-repos = ('core', 'extra', 'community')
+repos = ["core", "extra", "community"]
 
 class main:
     
@@ -70,11 +70,14 @@ class main:
         
     
     def pkSearch(self, package):
+        resp = False
         
         for repo in repos:
-            response = database.search().search(repo, package)
+            if resp:
+                break
+            resp = database.search().search("core", "kernel26")
         
-        self.bot.sendtext(repo+': '+response, True)
+        self.bot.sendtext(repo+': '+resp, True)
         
     
     def __doc__( self ):

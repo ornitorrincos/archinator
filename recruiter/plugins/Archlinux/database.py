@@ -89,15 +89,17 @@ class search:
     def search(self, repo, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
-        
-        self.f=open(repo+'.db', 'r')
-        self.packages=self.f.readlines()
+        path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        plugins_path = path + "/plugins/Archlinux/"
+
+        self.f=open(plugins_path+repo+'.db', 'r')
+        packages=self.f.readlines()
         self.f.close()
         
         #self.packages
         
-        for self.item in self.packages:
-            if package == rstripng(rstripng(self.item, '-'), '-'):
+        for item in packages:
+            if package == rstripng(rstripng(item, '-'), '-'):
                 return package
 
 
