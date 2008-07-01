@@ -73,11 +73,13 @@ class main:
         resp = False
         
         for repo in repos:
+            resp = database.search().search(repo, package)
             if resp:
                 break
-            resp = database.search().search("core", "kernel26")
-        
-        self.bot.sendtext(repo+': '+resp, True)
+                
+        print resp
+        msg = (" || ").join(resp)
+        self.bot.sendtext(repo+': '+msg, True)
         
     
     def __doc__( self ):

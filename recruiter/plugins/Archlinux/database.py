@@ -97,10 +97,11 @@ class search:
         self.f.close()
         
         #self.packages
-        
+        list = []
         for item in packages:
-            if package == rstripng(rstripng(item, '-'), '-'):
-                return package
+            if package in rstripng(rstripng(item, '-'), '-'):
+                 list.append(rstripng(rstripng(item, '-'), '-'))
+        return list
 
 
 if __name__ == '__main__':
