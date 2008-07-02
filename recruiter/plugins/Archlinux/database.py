@@ -17,9 +17,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 import os
 import httplib
 import tarfile
+from confy import lstripng
 
-#Execute both functions, one downloads the uncompressed tarfile and the other
-#decompresses it, remember to delete the temporal directory.
+'''Execute both functions, one downloads the uncompressed tarfile and the other
+decompresses it, remember to delete the temporal directory.'''
 
 repos = ('core', 'extra', 'community')
 
@@ -70,7 +71,6 @@ class sync(self):
             
             os.remove(self.path+self.dir)
         os.remove(self.path)
-        os.remove(repo+'.db')
         
         
 
