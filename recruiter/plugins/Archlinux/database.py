@@ -24,17 +24,21 @@ decompresses it, remember to delete the temporal directory.'''
 
 repos = ('core', 'extra', 'community')
 
-class sync(self):
+class sync:
     
     def refresh(self, repo, mirror):
         '''gets database from mirror'''
-        self.f = open('./'+repo+'.db.tar.gz')
+        self.f = open('./'+repo+'.db.tar.gz', 'w')
         self.c=httplib.HTTPConnection(mirror)
-        self.c.request("GET", repo+'/os/i686/'+repo+'.db.tar.gz')
-        self.r=self.c.getresponse
+        self.c.request("GET", '/'+repo+'/os/i686/'+repo+'.db.tar.gz')
+        self.r=self.c.getresponse()
         
         if self.r.status == 200:
+            print self.r.status
             self.f.write(self.r.read())
+        
+        else:
+            print self.r.status, self.r.reason
         
         self.c.close()
         self.f.close()
@@ -45,7 +49,7 @@ class sync(self):
         if tarfile.is_tarfile(repo+'.db.tar.gz') == True:
             
             if os.path.exists('./'+repo) == False:
-                os.path.mkdir('./'+repo)
+                os.mkdir('./'+repo)
             
             self.tar = tarfile.open(repo+'.db.tar.gz')
             self.tar.extractall('./'+repo)
@@ -53,9 +57,10 @@ class sync(self):
             os.remove(repo+'.db.tar.gz')
             
             self.wrt = ''
+            self.dire = ''
             
-            for self.dir in os.listdir('./'+repo):
-                self.wrt += dir+'\n'
+            for self.dire in os.listdir('./'+repo):
+                self.wrt += self.dire+'\n'
             
             self.f = open(repo+'.db', 'w')
             self.f.write(self.wrt)
@@ -75,7 +80,7 @@ class sync(self):
         
 
 
-class search(self):
+class search:
     
     def search(self, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''
@@ -87,6 +92,6 @@ class search(self):
             self.f.close()
             
             for self.item in self.packages:
-                if package == self.item:
+                if package == lstripng(self.item, '\n'):
                     return package
             
