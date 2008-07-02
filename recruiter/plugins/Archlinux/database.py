@@ -20,6 +20,7 @@ import os
 import sys
 import httplib
 import tarfile
+import sqlite3
 from confy import rstripng
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
