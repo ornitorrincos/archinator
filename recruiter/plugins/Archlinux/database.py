@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 import os
 import httplib
 import tarfile
-from confy import lstripng
+from confy import rstripng
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
 decompresses it, remember to delete the temporal directory.'''
@@ -89,14 +89,15 @@ class search:
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
         
-        self.f=open(self.repo+'.db', 'r')
-        self.packages=self.f.read()
+        self.f=open(repo+'.db', 'r')
+        self.packages=self.f.readlines()
         self.f.close()
         
+        #self.packages
+        
         for self.item in self.packages:
-            if package == lstripng(lstripng(lstripng(self.item, '\n'), '-'), '-'):
+            if package == rstripng(rstripng(self.item, '-'), '-'):
                 return package
-            
 
 
 if __name__ == '__main__':

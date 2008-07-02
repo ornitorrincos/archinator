@@ -74,7 +74,7 @@ class main:
         for repo in repos:
             response = database.search().search(repo, package)
         
-        self.bot.sendtext(response, True)
+        self.bot.sendtext(repo+': '+response, True)
         
     
     def __doc__( self ):

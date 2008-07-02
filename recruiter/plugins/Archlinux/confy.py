@@ -74,7 +74,6 @@ def lstripng(name, until):
         if name[i] == until:
             noun = str(name[i+1:])
     
-    del i
     return noun
     
 
@@ -86,7 +85,6 @@ def rstripng(name, until):
         if name[i] == until:
             noun = str(name[:i])
     
-    del i
     return noun
 
 def put(conflc, task, value):
