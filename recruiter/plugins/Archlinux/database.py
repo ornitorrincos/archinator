@@ -17,6 +17,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 """
 
 import os
+import sys
 import httplib
 import tarfile
 from confy import rstripng
@@ -101,6 +102,19 @@ class search:
 
 
 if __name__ == '__main__':
-    sync().refresh('core', 'mir.archlinux.fr')
-    sync().expander('core')
-    sync().cleanup('core')
+    try:
+        if sys.argv[1] == '-test':
+            sync().refresh('core', 'mir.archlinux.fr')
+            sync().expander('core')
+            sync().cleanup('core')
+        if sys.argv[1] == '-update':
+            for repo in repos:
+                sync().refresh(repo, 'mir.archlinux.fr')
+                sync().expander(repo)
+                sync().cleanup(repo)
+        else:
+            print 'wrong command -test for test and -update for update'
+    
+    except IndexError:
+        
+        print 'wrong command -test for test and -update for update'
