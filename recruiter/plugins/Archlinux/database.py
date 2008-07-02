@@ -85,18 +85,17 @@ class sync:
 
 class search:
     
-    def search(self, package):
+    def search(self, repo, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
         
-        for self.repo in repos:
-            self.f=open(self.repo+'.db', 'r')
-            self.packages=self.f.read()
-            self.f.close()
-            
-            for self.item in self.packages:
-                if package == lstripng(self.item, '\n'):
-                    return package
+        self.f=open(self.repo+'.db', 'r')
+        self.packages=self.f.read()
+        self.f.close()
+        
+        for self.item in self.packages:
+            if package == lstripng(self.item, '\n'):
+                return package
             
 
 

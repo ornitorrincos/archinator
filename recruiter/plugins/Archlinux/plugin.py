@@ -3,6 +3,9 @@
 import re
 import urllib
 import feedparser
+import database
+
+repos = ('core', 'extra', 'community')
 
 class main:
     
@@ -43,7 +46,9 @@ class main:
                 
         self.bot.sendtext(msg, True)
          
-    def pkSearch( self, package):
+    
+    #old pksearch code, here as backup
+    '''def pkSearch( self, package):
         html = urllib.urlopen('http://aur.archlinux.org/packages.php?setlang=en' +
                               '&do_Search=SeB=nd&L=0&C=0&PP=100&K=' + package).read()
                                
@@ -61,8 +66,17 @@ class main:
         if len(found) > 12:
             list += " 01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE HAY MÁS DE 12 RESULTADOS***"
     
-        self.bot.sendtext(list, True)
+        self.bot.sendtext(list, True)'''
         
+    
+    def pkSearch(self, package):
+        
+        for repo in repos:
+            response = database.search().search(repo, package)
+        
+        self.bot.sendtext(response, True)
+        
+    
     def __doc__( self ):
         self.bot.sendtext("USO: search [paquete], VAMOS NO ES TAN DIFICIL", True)
         self.bot.sendtext("acciones: search", True)
