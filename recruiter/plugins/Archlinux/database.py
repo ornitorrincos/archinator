@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Copyright (c) 2008, Imanol celaya <ilcra1989@gmail.com>
 
@@ -34,7 +36,7 @@ class sync:
         self.r=self.c.getresponse()
         
         if self.r.status == 200:
-            print self.r.status
+            print self.r.status, self.r.reason
             self.f.write(self.r.read())
         
         else:
@@ -57,10 +59,11 @@ class sync:
             os.remove(repo+'.db.tar.gz')
             
             self.wrt = ''
-            self.dire = ''
+            self.lnfn = '\n'
             
             for self.dire in os.listdir('./'+repo):
-                self.wrt += self.dire+'\n'
+                self.wrt += self.dire+self.lnfn
+            
             
             self.f = open(repo+'.db', 'w')
             self.f.write(self.wrt)
@@ -70,12 +73,12 @@ class sync:
         '''Cleans the temporary directory'''
         self.path='./'+repo
         
-        for self.dir in os.listdir(self.path):
-            for self.file in os.listdir(self.path+self.dir):
-                os.remove(self.path+self.dir+self.file)
+        for self.dire in os.listdir(self.path):
+            for self.file in os.listdir(self.path+'/'+self.dire):
+                os.remove(self.path+'/'+self.dire+'/'+self.file)
             
-            os.remove(self.path+self.dir)
-        os.remove(self.path)
+            os.removedirs(self.path+'/'+self.dire)
+        #os.remove(self.path)
         
         
 
@@ -95,3 +98,9 @@ class search:
                 if package == lstripng(self.item, '\n'):
                     return package
             
+
+
+if __name__ == '__main__':
+    sync().refresh('core', 'mir.archlinux.fr')
+    sync().expander('core')
+    sync().cleanup('core')
