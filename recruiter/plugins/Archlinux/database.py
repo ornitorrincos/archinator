@@ -94,7 +94,7 @@ class search:
         self.f.close()
         
         for self.item in self.packages:
-            if package == lstripng(self.item, '\n'):
+            if package == lstripng(lstripng(lstripng(self.item, '\n'), '-'), '-'):
                 return package
             
 
