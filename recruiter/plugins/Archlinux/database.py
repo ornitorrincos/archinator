@@ -89,19 +89,21 @@ class search:
     def search(self, repo, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
-        path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        plugins_path = path + "/plugins/Archlinux/"
+        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.plugins_path = self.path + "/plugins/Archlinux/"
 
-        self.f=open(plugins_path+repo+'.db', 'r')
-        packages=self.f.readlines()
+        self.f=open(self.plugins_path+repo+'.db', 'r')
+        self.packages=self.f.readlines()
         self.f.close()
         
-        #self.packages
-        list = []
-        for item in packages:
-            if package in rstripng(rstripng(item, '-'), '-'):
-                 list.append(rstripng(rstripng(item, '-'), '-'))
-        return list
+        self.list = []
+        if os.path.exists('update.lock') == False:
+            for self.item in self.packages:
+                if package in rstripng(rstripng(self.item, '-'), '-'):
+                    self.list.append(rstripng(rstripng(self.item, '-'), '-'))
+        if os.path.exists('update.lock') == True:
+            self.list.append('Actualizando base de datos')
+        return self.list
 
 
 if __name__ == '__main__':
@@ -111,10 +113,13 @@ if __name__ == '__main__':
             sync().expander('core')
             sync().cleanup('core')
         if sys.argv[1] == '-update':
+            f = open('update.lock', 'w')
+            f.close()
             for repo in repos:
                 sync().refresh(repo, 'mir.archlinux.fr')
                 sync().expander(repo)
                 sync().cleanup(repo)
+            os.remove('update.lock')
         else:
             print 'wrong command -test for test and -update for update'
     
