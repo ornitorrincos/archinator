@@ -80,11 +80,14 @@ class sync:
                 os.remove(self.path+'/'+self.dire+'/'+self.file)
             
             os.removedirs(self.path+'/'+self.dire)
-        #os.remove(self.path)
         
     
-    def sqlitedb(self, repo):
+    def createdb(self, repo):
         self.conn = sqlite3.connect(repo+'.db')
+        c = self.conn.cursor()
+        c.execute('''create table packages (repo text, package text, version text, desc text)''')
+        conn.commit()
+        c.close()
     
 
 
@@ -94,7 +97,7 @@ class search:
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
         path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        plugins_path = path + "/plugins/Archlinux/"
+        plugins_path = path + '/plugins/Archlinux/'
 
         self.f=open(plugins_path+repo+'.db', 'r')
         packages=self.f.readlines()
@@ -119,6 +122,12 @@ if __name__ == '__main__':
                 sync().refresh(repo, 'mir.archlinux.fr')
                 sync().expander(repo)
                 sync().cleanup(repo)
+        if sys.argv[1] == '-first-run':
+            '''when sqlite is ready
+            '''
+            for repo in repos:
+                sync().createdb(repo)
+                sync().updatedb(repo, 'mir.archlinux.fr')
         else:
             print 'wrong command -test for test and -update for update'
     
