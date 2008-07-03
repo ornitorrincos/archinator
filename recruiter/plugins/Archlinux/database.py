@@ -59,17 +59,6 @@ class sync:
             self.tar.extractall('./'+repo)
             self.tar.close()
             os.remove(repo+'.db.tar.gz')
-            
-            self.wrt = ''
-            self.lnfn = '\n'
-            
-            for self.dire in os.listdir('./'+repo):
-                self.wrt += self.dire+self.lnfn
-            
-            
-            self.f = open(repo+'.db', 'w')
-            self.f.write(self.wrt)
-            self.f.close()
            
     def cleanup(self, repo):
         '''Cleans the temporary directory'''
@@ -92,6 +81,12 @@ class sync:
     def updatedb(self, repo, mirror):
         
         self.conn = sqlite3.connect(repo+'.db')
+        self.c = self.conn.cursor()
+        
+        for self.item in os.listdir('./'+repo):
+            self.t = (repo, self.item, 'none', 'none')
+            self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
+        self.conn.commit()
         
     
 
@@ -101,19 +96,23 @@ class search:
     def search(self, repo, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
-        path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        plugins_path = path + '/plugins/Archlinux/'
+        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.plugins_path = self.path + '/plugins/Archlinux/'
 
-        self.f=open(plugins_path+repo+'.db', 'r')
-        packages=self.f.readlines()
+        self.f=open(self.plugins_path+repo+'.db', 'r')
+        self.packages=self.f.readlines()
         self.f.close()
         
         #self.packages
-        list = []
-        for item in packages:
-            if package in rstripng(rstripng(item, '-'), '-'):
-                 list.append(rstripng(rstripng(item, '-'), '-'))
-        return list
+        self.list = []
+        if os.path.exists('update.lock') == False:
+            for self.item in self.packages:
+                if package in rstripng(rstripng(self.item, '-'), '-'):
+                    self.list.append(rstripng(rstripng(self.item, '-'), '-'))
+        if os.path.exists('update.lock') == True:
+            self.list.append('Actualizando base de datos...')
+        
+        return self.list
 
 
 if __name__ == '__main__':
@@ -124,9 +123,12 @@ if __name__ == '__main__':
             sync().cleanup('core')
         if sys.argv[1] == '-update':
             for repo in repos:
+                f = open('update.lock', 'w')
+                f.close()
                 sync().refresh(repo, 'mir.archlinux.fr')
                 sync().expander(repo)
                 sync().cleanup(repo)
+                os.remove('update.lock')
         if sys.argv[1] == '-first-run':
             '''when sqlite is ready
             '''
