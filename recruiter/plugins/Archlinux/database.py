@@ -84,10 +84,15 @@ class sync:
     
     def createdb(self, repo):
         self.conn = sqlite3.connect(repo+'.db')
-        c = self.conn.cursor()
-        c.execute('''create table packages (repo text, package text, version text, desc text)''')
-        conn.commit()
-        c.close()
+        self.c = self.conn.cursor()
+        self.c.execute('''create table packages (repo text, package text, version text, desc text)''')
+        self.conn.commit()
+        self.c.close()
+    
+    def updatedb(self, repo, mirror):
+        
+        self.conn = sqlite3.connect(repo+'.db')
+        
     
 
 
