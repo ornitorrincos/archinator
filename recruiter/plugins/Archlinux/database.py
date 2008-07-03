@@ -82,7 +82,10 @@ class sync:
             os.removedirs(self.path+'/'+self.dire)
         #os.remove(self.path)
         
-        
+    
+    def sqlitedb(self, repo):
+        self.conn = sqlite3.connect(repo+'.db')
+    
 
 
 class search:
