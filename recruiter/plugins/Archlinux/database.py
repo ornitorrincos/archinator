@@ -23,7 +23,7 @@ import tarfile
 import sqlite3
 from confy import rstripng
 from confy import lstripng
-from cinfy import lrstripng
+from confy import lrstripng
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
 decompresses it, remember to delete the temporal directory.'''
@@ -86,9 +86,10 @@ class sync:
         self.c = self.conn.cursor()
         
         for self.item in os.listdir('./'+repo):
-            self.t = (repo, rstripng(rstripng(self.item, '-'), '-'), lstripng(\
-            lrstripng(self.item, '-', 2)), 'none')
+            self.t = (repo, rstripng(rstripng(self.item, '-'), '-'),
+                      self.item.strip(rstripng(rstripng(self.item, '-'), '-')+'-'), 'none')
             self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
+        
         self.conn.commit()
         
     
@@ -97,6 +98,8 @@ class sync:
 class search:
     
     def sqlsearch(self, repo, package):
+    
+        self.conn = sqlite3.connect(repo+'.db')
     
     def search(self, repo, package):
         '''search for a package(quick fix, should migrate to sqlite3)'''

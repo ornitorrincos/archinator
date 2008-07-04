@@ -85,7 +85,7 @@ def lrstripng(name, until, number):
     for i in range(0, len(name)):
         if name[len(name)-1-i] == until and counter == number:
             noun = str(name[i:])
-        if name[len(name)-1-i] == until and counter < number:
+        else:
             counter += 1
     
     return noun
