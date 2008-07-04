@@ -77,16 +77,16 @@ def lstripng(name, until):
     return noun
 
 '''Added to the original file, '''
-def lrstripng(name, until, number):
+def diference(complete, name):
     
-    noun = name
-    counter = 0
     
-    for i in range(0, len(name)):
-        if name[len(name)-1-i] == until and counter == number:
-            noun = str(name[i:])
-        else:
-            counter += 1
+    for i in range(0, len(complete)):
+        try:
+            tmp = name[i]
+        
+        except IndexError:
+            noun = complete[i:]
+            break
     
     return noun
 

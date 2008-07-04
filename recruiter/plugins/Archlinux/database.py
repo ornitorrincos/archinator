@@ -23,7 +23,7 @@ import tarfile
 import sqlite3
 from confy import rstripng
 from confy import lstripng
-from confy import lrstripng
+from confy import diference
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
 decompresses it, remember to delete the temporal directory.'''
@@ -86,8 +86,9 @@ class sync:
         self.c = self.conn.cursor()
         
         for self.item in os.listdir('./'+repo):
-            self.t = (repo, rstripng(rstripng(self.item, '-'), '-'),
-                      self.item.strip(rstripng(rstripng(self.item, '-'), '-')+'-'), 'none')
+            self.name = rstripng(rstripng(self.item, '-'), '-')
+            self.t = (repo, self.name,
+                      diference(self.item, self.name+'-'), 'none')
             self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
         
         self.conn.commit()
