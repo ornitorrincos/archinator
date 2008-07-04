@@ -75,7 +75,20 @@ def lstripng(name, until):
             noun = str(name[i+1:])
     
     return noun
+
+'''Added to the original file, '''
+def lrstripng(name, until, number):
     
+    noun = name
+    counter = 0
+    
+    for i in range(0, len(name)):
+        if name[len(name)-1-i] == until and counter == number:
+            noun = str(name[i:])
+        if name[len(name)-1-i] == until and counter < number:
+            counter += 1
+    
+    return noun
 
 def rstripng(name, until):
     
