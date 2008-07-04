@@ -90,18 +90,19 @@ class search:
         '''search for a package(quick fix, should migrate to sqlite3)'''
         
         self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        self.plugins_path = self.path + "/plugins/Archlinux/"
-
-        self.f=open(self.plugins_path+repo+'.db', 'r')
-        self.packages=self.f.readlines()
-        self.f.close()
-        
-        self.list = []
-        if os.path.exists('update.lock') == False:
+        if os.path.exists(self.path+'/update.lock') == False:
+            self.plugins_path = self.path + '/plugins/Archlinux/'
+            
+            self.f=open(self.plugins_path+repo+'.db', 'r')
+            self.packages=self.f.readlines()
+            self.f.close()
+            
+            self.list = []
+            
             for self.item in self.packages:
                 if package in rstripng(rstripng(self.item, '-'), '-'):
                     self.list.append(rstripng(rstripng(self.item, '-'), '-'))
-        if os.path.exists('update.lock') == True:
+        if os.path.exists(self.path+'/update.lock') == True:
             self.list.append('Actualizando base de datos')
         return self.list
 
