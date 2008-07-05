@@ -14,7 +14,8 @@ class main:
         self.actions = {'archnews'   : self.archnews,
                         'archlinks'   : self.giveLinks,
                         'pksearch'   : self.pkSearch,
-                        'pkinfo'     : self.pkInfo }
+                        'pkinfo'     : self.pkInfo,
+                        'pksqlsearch': self.pksqlsearch}
     
     def archnews( self, *args ):
         news = feedparser.parse("http://www.archlinux.org/feeds/news/")
@@ -23,6 +24,17 @@ class main:
         self.bot.sendtext(news, True)
 
 
+    def pksqlsearch(self, package):
+        '''this code should end replacing pksearch, here for testing purposes'''
+        for self.repo in repos:
+            self.resp = database.search().sqlsearch(self.repo, package)
+            '''buggy, doesn't continue looking in other repos'''
+            if self.resp:
+                break
+        
+        msg = (" || ").join(self.resp)
+        self.bot.sendtext(msg, True)
+    
     def pkInfo( self, package):
 
         try: 

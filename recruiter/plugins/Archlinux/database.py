@@ -21,6 +21,7 @@ import sys
 import httplib
 import tarfile
 import sqlite3
+import urllib
 from confy import rstripng
 from confy import lstripng
 from confy import diference
@@ -92,11 +93,31 @@ class sync:
             self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
         
         self.conn.commit()
+        self.c.close()
+        
+    
+    def createaurdb(self):
+        
+        self.json = urllib.urlopen('http://aur.archlinux.org/rpc.php?type=search&arg=').read()
+        self.K = simplejson.loads(self.json)
+        
+        self.conn = sqlite3.connect('aur.db')
+        self.c = self.conn.cursor()
+        
+        self.c.execute('''create table packages (repo text, package text, version text, desc text)''')
+        self.conn.commit()
+        
+        for self.elem in self.K['results']:
+            self.t = ('aur', self.elem['Name'], 'None', 'none')
+            
+            self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
+        
+        
         
     
     def cleandb(self, repo):
-        
-        os.remove(repo+'.db')
+        if os.path.exists(repo+'.db'):
+            os.remove(repo+'.db')
     
 
 
