@@ -104,28 +104,21 @@ class search:
     
     def sqlsearch(self, repo, package):
     
-        self.conn = sqlite3.connect(repo+'.db')
-        self.c = self.conn.cursor()
-        t = ('%'+package+'%',)
-        self.c.execute('''select * from packages where ( package like ?)''', t)
-        
-    
-    def search(self, repo, package):
-        '''search for a package(quick fix, should migrate to sqlite3)'''
+        self.list = []
         self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        if os.path.exists('update.lock') == False:
-            self.plugins_path = self.path + '/plugins/Archlinux/'
+        self.plugins_path = self.path + '/plugins/Archlinux/'
+        
+        if os.path.exists(self.plugins_path+'update.lock') == False:
+            self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
+            self.c = self.conn.cursor()
+            t = ('%'+package+'%',)
+            self.c.execute('''select * from packages where ( package like ?)''', t)
             
-            self.f=open(self.plugins_path+repo+'.db', 'r')
-            self.packages=self.f.readlines()
-            self.f.close()
+            self.res = self.c.fetchall()
             
-            self.list = []
-            
-            for self.item in self.packages:
-                if package in rstripng(rstripng(self.item, '-'), '-'):
-                    self.list.append(rstripng(rstripng(self.item, '-'), '-'))
-        if os.path.exists('update.lock') == True:
+            for self.line in self.res:
+                self.list.append(self.line[1])
+        if os.path.exists(self.plugins_path+'update.lock') == True:
             self.list.append('Actualizando base de datos...')
         
         return self.list
