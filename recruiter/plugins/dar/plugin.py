@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+#alias file
+
 import os
 
 class main:
@@ -10,7 +12,7 @@ class main:
         self.reqs = {'errormsg'       : self.givErrormsg,
                      'cafe'           : self.giveCoffe,
                      'silencio'       : self.giveSilence,
-                     'googleit'       : self.fuckinGoogleit
+                     'googleit'       : self.fuckinGoogleit,
                      'como-preguntar' : self.smartQuestions }
     
 
