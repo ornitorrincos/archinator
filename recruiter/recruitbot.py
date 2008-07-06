@@ -75,7 +75,7 @@ class rEcRuItEr:
 		if reply and self.privReply:
 			self.socket.send('PRIVMSG ' + self.reqUser + ' :' + ' ' +  text +'\n')
 		elif reply and not self.privReply:
-			self.socket.send('PRIVMSG ' + self.reqChannel + ' :' + self.reqUser + ' ' +  text +'\n')
+			self.socket.send('PRIVMSG ' + self.reqChannel + ' : ➜ ' + self.reqUser + ' ' +  text +'\n')
 		else:
 			self.socket.send(text +'\n')
 			
