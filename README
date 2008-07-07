@@ -1,1 +1,4 @@
 archinator, the bot from #archlinux-es on freenode
+
+main development happens on sqlite branch, here are backported some working 
+features.
