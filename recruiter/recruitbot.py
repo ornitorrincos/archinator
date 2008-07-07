@@ -44,7 +44,8 @@ class rEcRuItEr:
 		self.sendtext('NICK ' + NICK + '\n') #Send the nick to server
 		self.sendtext('USER ' + IDENT + ' ' + HOST + ' bla :' + REALNAME + '\n') #Identify to server
 		self.sendtext('PRIVMSG NICKSERV :IDENTIFY '+PASSWORD+'\n')
-		self.sendtext('JOIN ' + CHANNELINIT + '\n')
+		for chan in OTHER_CHANNELS:
+			self.sendtext('JOIN ' + chan + '\n')
 		
 		while self.work:
 		    msg = self.socket.recv(500) #recieve server messages
