@@ -134,8 +134,8 @@ class search:
         if os.path.exists(self.plugins_path+'update.lock') == False:
             self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
             self.c = self.conn.cursor()
-            t = ('%'+package+'%',)
-            self.c.execute('''select * from packages where ( package like ?)''', t)
+            self.t = ('%'+package+'%',)
+            self.c.execute('''select * from packages where ( package like ?)''', self.t)
             
             self.res = self.c.fetchall()
             
@@ -143,7 +143,7 @@ class search:
                 self.list.append(self.line[1])
         if os.path.exists(self.plugins_path+'update.lock') == True:
             self.list.append('Actualizando base de datos...')
-        
+        print self.list
         return self.list
 
 

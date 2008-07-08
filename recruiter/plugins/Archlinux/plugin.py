@@ -5,7 +5,7 @@ import urllib
 import feedparser
 import database
 
-repos = ["core", "extra", "community"]
+repos = ('core', 'extra', 'community')
 
 class main:
     
@@ -32,8 +32,21 @@ class main:
             if self.resp:
                 break
         
-        msg = (" || ").join(self.resp)
-        self.bot.sendtext(msg, True)
+        '''AUR code not here for the moment'''
+        '''for self.pkg in self.findInAur(package):
+            self.resp.append(self.pkg)
+        print self.resp
+        if not self.resp:
+            self.msg = 'NO EXISTE EL PAQUETE, QUE QUIERES QUE TE LO CREE TAMBIEN'
+        else:
+            self.msg = (' || ').join(self.resp)
+            if len(self.resp) > 12:
+                self.msg += '01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE \
+                HAY MÁS DE 12 RESULTADOS***'
+        '''
+        
+        self.msg = (' || ').join(self.resp)
+        self.bot.sendtext(str(self.msg), True)
     
     def pkInfo( self, package):
 
