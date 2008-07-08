@@ -7,34 +7,40 @@ class main:
     def __init__( self, bot ):
         self.bot = ""
         self.actions = {'dar'   : self.handler}
-        self.reqs = {'archlinks'  : self.giveLinks,
-                     'errormsg'   : self.givErrormsg,
-                     'cafe'       : self.giveCoffe}
+        self.reqs = {'errormsg'       : self.givErrormsg,
+                     'cafe'           : self.giveCoffe,
+                     'silencio'       : self.giveSilence,
+                     'googleit'       : self.fuckinGoogleit
+                     'como-preguntar' : self.smartQuestions }
     
 
+    def smartQuestions( self, user ):
+        msg = "%s ➜ http://catb.org/esr/faqs/smart-questions.html" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
+        
+    def fuckinGoogleit( self, user ):
+        msg = "%s ➜ http://www.justfuckinggoogleit.com/" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
+    
+    def giveSilence( self, user ):
+        msg = "%s mando a decir %s que te CALLES!!" % (user, self.bot.reqUser )
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
+        
     def giveCoffe( self, user ):
         msg = "da una manta y una taza de café a %s" % user
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
         
     def givErrormsg( self, user ):
-        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' : ' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
-        
-    def giveLinks( self, user):
-        links = ["Archlinux: http://archlinux.org/", 
-                 "Forums: http://bbs.archlinux.org/",
-                 "Bugs: http://bugs.archlinux.org/",
-                 "Wiki: http://wiki.archlinux.org/",
-                 "Packages: http://aur.archlinux.org/packages.php",
-                 "Get Arch: http://www.archlinux.org/download/"]
-        
-        msg = (" || ").join(links)
-
-        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' : ' + user + ' ➜ ' +  msg )
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
         
     def handler(self, bot, cmd, args):
         self.bot = bot
         
         args = args.split()
         
-        self.reqs[args[1]](args[0])
+        if args[1] in self.bot.actions:
+            self.bot.reqUser = args[0]
+            self.bot.actions[args[1]].handler( self.bot, args[1], (' ').join(args[2:]))
+        else:
+            self.reqs[args[1]](args[0])
 
