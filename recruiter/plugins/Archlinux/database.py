@@ -25,6 +25,7 @@ import urllib
 from confy import rstripng
 from confy import lstripng
 from confy import diference
+from confy import get
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
 decompresses it, remember to delete the temporal directory.'''
@@ -89,7 +90,8 @@ class sync:
         for self.item in os.listdir('./'+repo):
             self.name = rstripng(rstripng(self.item, '-'), '-')
             self.t = (repo, self.name,
-                      diference(self.item, self.name+'-'), 'none')
+                      diference(self.item, self.name+'-'),
+                      rstripng(get(repo+'/'+self.item+'/desc', '%DESC%\n')[1], '\n'))
             self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
         
         self.conn.commit()
