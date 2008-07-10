@@ -22,7 +22,7 @@ class main:
 
     	
     def __doc__(self):
-    	self.bot.sendtext('Uso: pregarch [add <quote>] [quotes]', True)
+    	self.bot.sendtext('Uso: bofh', True)
 
     def handler(self, bot, cmd, args):
     	self.bot = bot
@@ -30,8 +30,5 @@ class main:
         random.shuffle( self.excuses )
         self.bot.sendtext(self.excuses[0].strip().replace("\n"," "), True)
         return True
-    
-    	except:
-    	    self.__doc__()
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
