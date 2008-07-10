@@ -16,4 +16,4 @@ CHANNELS=['#archlinux-ve','#archlinux-es','#php-ve']
 
 #PLUGINS
 
-ENABLEDPLUGINS = [ 'pregarch', 'dar', 'Archlinux', 'Time', 'LastFm', 'google']
+ENABLEDPLUGINS = [ 'bofh','pregarch', 'dar', 'Archlinux', 'Time', 'LastFm', 'google']
