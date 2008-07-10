@@ -29,7 +29,7 @@ class main:
             self.bot = bot
             
             if args:
-                self.bot.sendtext(self.excuses[args.strip()].strip().replace("\n"," "), True)
+                self.bot.sendtext(self.excuses[int(args.strip())].strip().replace("\n"," "), True)
             else:
                 self.bot.sendtext(choice(self.excuses).strip().replace("\n"," "), True)
             return True
