@@ -1,5 +1,5 @@
 import sys
-import random, pickle
+from random import choice
 import re
 from config import *
 
@@ -22,13 +22,18 @@ class main:
 
     	
     def __doc__(self):
-    	self.bot.sendtext('Uso: bofh', True)
+    	self.bot.sendtext('Uso: bofh [ numero ]', True)
 
     def handler(self, bot, cmd, args):
-    	self.bot = bot
-        
-        random.shuffle( self.excuses )
-        self.bot.sendtext(self.excuses[0].strip().replace("\n"," "), True)
-        return True
+        try:
+            self.bot = bot
+            
+            if args:
+                self.bot.sendtext(self.excuses[args.strip()].strip().replace("\n"," "), True)
+            else:
+                self.bot.sendtext(choice(self.excuses).strip().replace("\n"," "), True)
+            return True
+        except:
+            self.__doc__()
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
