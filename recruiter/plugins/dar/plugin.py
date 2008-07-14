@@ -10,8 +10,9 @@ class main:
         self.reqs = {'errormsg'       : self.givErrormsg,
                      'cafe'           : self.giveCoffe,
                      'silencio'       : self.giveSilence,
-                     'googleit'       : self.fuckinGoogleit
-                     'como-preguntar' : self.smartQuestions }
+                     'googleit'       : self.fuckinGoogleit,
+                     'como-preguntar' : self.smartQuestions,
+                     'consejo'        : self.giveConsejo}
     
 
     def smartQuestions( self, user ):
@@ -27,8 +28,12 @@ class main:
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
         
     def giveCoffe( self, user ):
-        msg = "da una manta y una taza de café a %s" % user
+        msg = "da una manta y una taza de café colombiano a %s" % user
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
+
+    def giveConsejo( self, user ):
+        msg = user + " ahómbrese y no sea marica le dije"
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
         
     def givErrormsg( self, user ):
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
