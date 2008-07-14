@@ -1,0 +1,1 @@
+BOFHSFILE = "bofh-excuses"
