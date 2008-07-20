@@ -125,44 +125,75 @@ class sync:
 
 class search:
     
-    def sqlsearch(self, repo, package):
-    
-        self.list = []
+    def __init__(self):
         self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
         self.plugins_path = self.path + '/plugins/Archlinux/'
+        self.repolist = []
+        self.aurlist = []
+    
+    def sqlsearch(self, repo, package):
         
-        if os.path.exists(self.plugins_path+'update.lock') == False:
-            self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
-            self.c = self.conn.cursor()
-            self.t = ('%'+package+'%',)
-            self.c.execute('''select * from packages where ( package like ?)''', self.t)
+        if not os.path.exists(self.plugins_path+'update.lock'):
+            if not os.path.exists(self.plugins_path+repo+'.db'):
+                raise RepoError(repo)
+            else:
+                self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
+                self.c = self.conn.cursor()
+                self.t = ('%'+package+'%',)
+                self.c.execute('''select * from packages where ( package like ?)''',
+                 self.t)
+                
+                self.res = self.c.fetchall()
+                self.conn.commit()
+                self.c.close()
             
-            self.res = self.c.fetchall()
-            
-            for self.line in self.res:
-                self.list.append(self.line[1])
+                for self.line in self.res:
+                    self.repolist.append(self.line[1])
         if os.path.exists(self.plugins_path+'update.lock') == True:
-            self.list.append('Actualizando base de datos...')
-        print self.list
-        return self.list
+            self.repolist.append('Actualizando base de datos...')
+        return self.repolist
     
     def aurlsearch(self, package):
         
         self.aur='http://aur.archlinux.org/rpc.php?type=search&arg='
         self.c = urllib.urlopen(self.aur+package).read()
         
-        self.lista = []
         for self.element in simplejson.loads(self.c)[u'results']:
-            self.lista.append(self.element[u'Name'])
+            self.aurlist.append(self.element[u'Name'])
             
-        return self.lista
+        return self.aurlist
         
 class info:
-    
+    def __init__(self):
+        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.plugins_path = self.path + '/plugins/Archlinux/'
+        
     def sqlinfo(self, repo, package):
+        self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
+        self.c = self.conn.cursor()
+        
+        self.t (package,)
+        self.c.execute('''select * from packages where (package like ?)''',
+         self.t)
+        
+        self.res = self.c.fetchall()
+        self.conn.commit()
+        self.c.close()
+        
         
     def aurlinfo(self, package):
-        
+        pass
+    
+
+class Error(Exception):
+    '''basic error class'''
+    pass
+
+
+class RepoError(Error):
+    '''raised when repo not found'''
+    def __init__(self, repo):
+        self.message = repo+' not found'
 
 if __name__ == '__main__':
     try:
@@ -171,16 +202,6 @@ if __name__ == '__main__':
             sync().expander('core')
             sync().cleanup('core')
         if sys.argv[1] == '-update':
-            for repo in repos:
-                f = open('update.lock', 'w')
-                f.close()
-                sync().refresh(repo, 'mir.archlinux.fr')
-                sync().expander(repo)
-                sync().cleanup(repo)
-                os.remove('update.lock')
-        if sys.argv[1] == '-first-run':
-            '''when sqlite is ready
-            '''
             for repo in repos:
                 f = open('update.lock', 'w')
                 f.close()
@@ -200,4 +221,5 @@ if __name__ == '__main__':
     
     except IndexError:
         
-        print 'wrong command -test for test and -update for update'
+        print 'wrong command -test for test and -update for update or \
+        -test-aur for teting aur search capabilities'
