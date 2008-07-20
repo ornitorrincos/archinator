@@ -44,7 +44,7 @@ class main:
                 self.msg += '01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE \
                 HAY MÁS DE 12 RESULTADOS***'
         '''
-        
+        self.resp += database.search().aurlsearch(package)
         self.msg = (' || ').join(self.resp)
         self.bot.sendtext(str(self.msg), True)
     
