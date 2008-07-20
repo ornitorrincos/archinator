@@ -23,9 +23,9 @@ import tarfile
 import sqlite3
 import urllib
 from confy import rstripng
-from confy import lstripng
 from confy import diference
 from confy import get
+import simplejson
 
 '''Execute both functions, one downloads the uncompressed tarfile and the other
 decompresses it, remember to delete the temporal directory.'''
@@ -145,7 +145,17 @@ class search:
             self.list.append('Actualizando base de datos...')
         print self.list
         return self.list
-
+    
+    def aurlsearch(self, package):
+        
+        self.aur='http://aur.archlinux.org/rpc.php?type=search&arg='
+        self.c = urllib.urlopen(self.aur+package).read()
+        
+        self.lista = []
+        for self.element in simplejson.loads(self.c)[u'results']:
+            self.lista.append(self.element[u'Name'])
+            
+        return self.lista
 
 if __name__ == '__main__':
     try:
@@ -174,6 +184,10 @@ if __name__ == '__main__':
                 sync().updatedb(repo)
                 sync().cleanup(repo)
                 os.remove('update.lock')
+        if sys.argv[1] == '-test-aur':
+            
+            print search().aurlsearch('kernel26')
+        
         else:
             print 'wrong command -test for test and -update for update'
     
