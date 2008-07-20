@@ -156,6 +156,13 @@ class search:
             self.lista.append(self.element[u'Name'])
             
         return self.lista
+        
+class info:
+    
+    def sqlinfo(self, repo, package):
+        
+    def aurlinfo(self, package):
+        
 
 if __name__ == '__main__':
     try:

@@ -14,8 +14,7 @@ class main:
         self.actions = {'archnews'   : self.archnews,
                         'archlinks'   : self.giveLinks,
                         'pksearch'   : self.pkSearch,
-                        'pkinfo'     : self.pkInfo,
-                        'pksqlsearch': self.pksqlsearch}
+                        'pkinfo'     : self.pkInfo,}
     
     def archnews( self, *args ):
         news = feedparser.parse("http://www.archlinux.org/feeds/news/")
@@ -24,28 +23,16 @@ class main:
         self.bot.sendtext(news, True)
 
 
-    def pksqlsearch(self, package):
-        '''this code should end replacing pksearch, here for testing purposes'''
+    def pkSearch(self, package):
         for self.repo in repos:
             self.resp = database.search().sqlsearch(self.repo, package)
             '''buggy, doesn't continue looking in other repos'''
             if self.resp:
                 break
         
-        '''AUR code not here for the moment'''
-        '''for self.pkg in self.findInAur(package):
-            self.resp.append(self.pkg)
-        print self.resp
-        if not self.resp:
-            self.msg = 'NO EXISTE EL PAQUETE, QUE QUIERES QUE TE LO CREE TAMBIEN'
-        else:
-            self.msg = (' || ').join(self.resp)
-            if len(self.resp) > 12:
-                self.msg += '01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE \
-                HAY MÁS DE 12 RESULTADOS***'
-        '''
         self.resp += database.search().aurlsearch(package)
-        self.msg = (' || ').join(self.resp)
+        self.msg = (' || ').join(self.resp[:12])
+        
         self.bot.sendtext(str(self.msg), True)
     
     def pkInfo( self, package):
@@ -71,37 +58,6 @@ class main:
                 
         self.bot.sendtext(msg, True)
          
-    
-    #old pksearch code, here as backup
-    def findInAur( self, package):
-        
-        html = urllib.urlopen('http://aur.archlinux.org/packages.php?setlang=en' +
-                              '&do_Search=SeB=nd&L=0&C=0&PP=100&K=' + package).read()
-                               
-        found = (re.compile('packages.php\?ID=.*?><.*?>(.*?)</span>')).findall(html)
-
-        return found
-        
-    
-    def pkSearch(self, package):
-        resp = []
-
-        for repo in repos:
-            resp = database.search().search(repo, package)
-            if resp:
-                break
-
-        for pkg in self.findInAur(package):
-            resp.append(pkg)
-            
-        if not resp:
-            msg = "NO EXISTE EL PAQUETE, QUE QUIERES QUE TE LO CREE TAMBIEN"
-        else:
-            msg = (" || ").join(resp[:12])
-            if len(resp) > 12:
-                msg += " 01***SERE UN BOT PERO NO IDIOTA. SE MAS ESPECÍFIC@ QUE HAY MÁS DE 12 RESULTADOS***"
-            
-        self.bot.sendtext( msg, True)
         
     
     def __doc__( self ):
