@@ -37,18 +37,10 @@ class sync:
     def refresh(self, repo, mirror):
         '''gets database from mirror'''
         self.f = open('./'+repo+'.db.tar.gz', 'w')
-        self.c=httplib.HTTPConnection(mirror)
-        self.c.request("GET", '/'+repo+'/os/i686/'+repo+'.db.tar.gz')
-        self.r=self.c.getresponse()
+        self.c=urllib.urlopen(mirror+'os/i686/'+repo+'.db.tar.gz').read()
+
+        self.f.write(self.c)
         
-        if self.r.status == 200:
-            print self.r.status, self.r.reason
-            self.f.write(self.r.read())
-        
-        else:
-            print self.r.status, self.r.reason
-        
-        self.c.close()
         self.f.close()
     
     
@@ -169,6 +161,10 @@ class info:
         self.plugins_path = self.path + '/plugins/Archlinux/'
         
     def sqlinfo(self, repo, package):
+        
+        if not os.path.exists(self.plugins_path+repo+'.db'):
+            raise RepoError(repo)
+        
         self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
         self.c = self.conn.cursor()
         
@@ -180,6 +176,12 @@ class info:
         self.conn.commit()
         self.c.close()
         
+        try:
+            self.resp = self.res[3]
+        except IndexError:
+            raise PackageError(package)
+        else:
+            return str(self.resp)
         
     def aurlinfo(self, package):
         pass
@@ -193,7 +195,11 @@ class Error(Exception):
 class RepoError(Error):
     '''raised when repo not found'''
     def __init__(self, repo):
-        self.message = repo+' not found'
+        self.message = repo + ' not found'
+class PackageError(Error):
+    '''raised when package not found'''
+    def __init__(self, package):
+        self.message = package + ' not found'
 
 if __name__ == '__main__':
     try:
