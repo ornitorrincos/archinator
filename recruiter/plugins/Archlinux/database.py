@@ -36,36 +36,44 @@ class sync:
     
     def refresh(self, repo, mirror):
         '''gets database from mirror'''
-        self.f = open('./'+repo+'.db.tar.gz', 'w')
-        self.c=urllib.urlopen(mirror+'os/i686/'+repo+'.db.tar.gz').read()
+        try:
+            self.f = open('./'+repo+'.db.tar.gz', 'w')
+            self.c=urllib.urlopen(mirror+'os/i686/'+repo+'.db.tar.gz').read()
 
-        self.f.write(self.c)
+            self.f.write(self.c)
         
-        self.f.close()
+            self.f.close()
+        except IOError:
+            raise UpdateError('Error downloading'+repo+'.db.tar.gz')
     
     
     def expander(self, repo):
         '''compresses and processes the database'''
-        if tarfile.is_tarfile(repo+'.db.tar.gz') == True:
-            
-            if os.path.exists('./'+repo) == False:
-                os.mkdir('./'+repo)
-            
-            self.tar = tarfile.open(repo+'.db.tar.gz')
-            self.tar.extractall('./'+repo)
-            self.tar.close()
-            os.remove(repo+'.db.tar.gz')
+        if not os.path.exists(repo+'.db.tar.gz'):
+            raise UpdateError(repo+'.db.tar.gz not written to disk')
+        
+        else:
+            if tarfile.is_tarfile(repo+'.db.tar.gz'):
+                
+                if not os.path.exists('./'+repo):
+                    os.mkdir('./'+repo)
+                
+                self.tar = tarfile.open(repo+'.db.tar.gz')
+                self.tar.extractall('./'+repo)
+                self.tar.close()
+                os.remove(repo+'.db.tar.gz')
            
     def cleanup(self, repo):
         '''Cleans the temporary directory'''
         self.path='./'+repo
-        
-        for self.dire in os.listdir(self.path):
-            for self.file in os.listdir(self.path+'/'+self.dire):
-                os.remove(self.path+'/'+self.dire+'/'+self.file)
-            
-            os.removedirs(self.path+'/'+self.dire)
-        
+        try: 
+            for self.dire in os.listdir(self.path):
+                for self.file in os.listdir(self.path+'/'+self.dire):
+                    os.remove(self.path+'/'+self.dire+'/'+self.file)
+                
+                os.removedirs(self.path+'/'+self.dire)
+        except OSError:
+            raise UpdateError('''couldn't clean'''+repo)
     
     def createdb(self, repo):
         self.conn = sqlite3.connect(repo+'.db')
@@ -187,19 +195,22 @@ class info:
         pass
     
 
+'''database.py API errors'''
 class Error(Exception):
     '''basic error class'''
     pass
-
-
 class RepoError(Error):
-    '''raised when repo not found'''
+    '''raised when local repo db not found'''
     def __init__(self, repo):
         self.message = repo + ' not found'
 class PackageError(Error):
     '''raised when package not found'''
     def __init__(self, package):
         self.message = package + ' not found'
+class UpdateError(Error):
+    '''raised ir error updating db'''
+    def __init__(self, message):
+        self.message = message
 
 if __name__ == '__main__':
     try:
