@@ -38,7 +38,7 @@ class sync:
         '''gets database from mirror'''
         try:
             self.f = open('./'+repo+'.db.tar.gz', 'w')
-            self.c=urllib.urlopen(mirror+'os/i686/'+repo+'.db.tar.gz').read()
+            self.c=urllib.urlopen(mirror+'/'+repo+'/os/i686/'+repo+'.db.tar.gz').read()
 
             self.f.write(self.c)
         
@@ -52,9 +52,12 @@ class sync:
         if not os.path.exists(repo+'.db.tar.gz'):
             raise UpdateError(repo+'.db.tar.gz not written to disk')
         
-        else:
-            if tarfile.is_tarfile(repo+'.db.tar.gz'):
-                
+        elif os.path.exists(repo+'.db.tar.gz'):
+            
+            if not tarfile.is_tarfile(repo+'.db.tar.gz'):
+                raise UpdateError(repo+'.db.tar.gz not a tarfile')
+            
+            else:
                 if not os.path.exists('./'+repo):
                     os.mkdir('./'+repo)
                 
@@ -62,6 +65,7 @@ class sync:
                 self.tar.extractall('./'+repo)
                 self.tar.close()
                 os.remove(repo+'.db.tar.gz')
+            
            
     def cleanup(self, repo):
         '''Cleans the temporary directory'''
@@ -76,6 +80,7 @@ class sync:
             raise UpdateError('''couldn't clean'''+repo)
     
     def createdb(self, repo):
+        
         self.conn = sqlite3.connect(repo+'.db')
         self.c = self.conn.cursor()
         self.c.execute('''create table packages (repo text, package text, version text, desc text)''')
@@ -98,25 +103,6 @@ class sync:
         self.c.close()
         
     
-    def createaurdb(self):
-        
-        self.json = urllib.urlopen('http://aur.archlinux.org/rpc.php?type=search&arg=').read()
-        self.K = simplejson.loads(self.json)
-        
-        self.conn = sqlite3.connect('aur.db')
-        self.c = self.conn.cursor()
-        
-        self.c.execute('''create table packages (repo text, package text, version text, desc text)''')
-        self.conn.commit()
-        
-        for self.elem in self.K['results']:
-            self.t = ('aur', self.elem['Name'], 'None', 'none')
-            
-            self.c.execute('''insert into packages values (?,?,?,?)''', self.t)
-        
-        
-        
-    
     def cleandb(self, repo):
         if os.path.exists(repo+'.db'):
             os.remove(repo+'.db')
@@ -127,7 +113,12 @@ class search:
     
     def __init__(self):
         self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        self.plugins_path = self.path + '/plugins/Archlinux/'
+        
+        if self.path[len('/plugins/Archlinux/'):] == '/plugins/Archlinux':
+            self.plugins_path = self.path[:len('/plugins/Archlinux/')]
+        else:
+            self.plugins_path = self.path + '/plugins/Archlinux/'
+        
         self.repolist = []
         self.aurlist = []
     
@@ -170,7 +161,14 @@ class info:
         
     def sqlinfo(self, repo, package):
         
-        if not os.path.exists(self.plugins_path+repo+'.db'):
+        if self.path[-len('/plugins/Archlinux'):] == '/plugins/Archlinux':
+            self.plugins_path = self.path[:len('/plugins/Archlinux')]
+        else:
+            print self.path
+            self.plugins_path = self.path + '/plugins/Archlinux/'
+        
+        if not os.path.exists(self.plugins_path+'/'+repo+'.db'):
+            print self.plugins_path
             raise RepoError(repo)
         
         self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
@@ -218,20 +216,23 @@ if __name__ == '__main__':
             sync().refresh('core', 'mir.archlinux.fr')
             sync().expander('core')
             sync().cleanup('core')
-        if sys.argv[1] == '-update':
+        elif sys.argv[1] == '-update':
             for repo in repos:
                 f = open('update.lock', 'w')
                 f.close()
                 sync().cleandb(repo)
-                sync().refresh(repo, 'mir.archlinux.fr')
+                sync().refresh(repo, 'http://mir.archlinux.fr/')
                 sync().expander(repo)
                 sync().createdb(repo)
                 sync().updatedb(repo)
                 sync().cleanup(repo)
                 os.remove('update.lock')
-        if sys.argv[1] == '-test-aur':
+        elif sys.argv[1] == '-test-aur':
             
             print search().aurlsearch('kernel26')
+        
+        elif sys.argv[1] == '-test-info':
+            print info().sqlinfo('core', 'kernel26')
         
         else:
             print 'wrong command -test for test and -update for update'

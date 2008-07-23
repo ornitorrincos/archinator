@@ -12,9 +12,10 @@ class main:
     def __init__( self, bot ):
         self.bot = ""
         self.actions = {'archnews'   : self.archnews,
-                        'archlinks'   : self.giveLinks,
+                        'archlinks'  : self.giveLinks,
                         'pksearch'   : self.pkSearch,
-                        'pkinfo'     : self.pkInfo,}
+                        'pkinfo'     : self.pkInfo,
+                        'sqlinfo'    : self.sqlinfo,}
     
     def archnews( self, *args ):
         news = feedparser.parse("http://www.archlinux.org/feeds/news/")
@@ -24,16 +25,27 @@ class main:
 
 
     def pkSearch(self, package):
+        self.resp = []
         for self.repo in repos:
-            self.resp = database.search().sqlsearch(self.repo, package)
-            '''buggy, doesn't continue looking in other repos'''
-            if self.resp:
-                break
+            self.resp.append(database.search().sqlsearch(self.repo, package))
         
         self.resp += database.search().aurlsearch(package)
         self.msg = (' || ').join(self.resp[:12])
         
         self.bot.sendtext(str(self.msg), True)
+    
+    def sqlinfo(self, package):
+        print 'sqlinfo'
+        self.counter = 0
+        print self.counter
+        for self.repo in repos:
+            try:
+                self.resp = database.info().sqlinfo(self.repo, package)
+            except PackageError(package):
+                self.counter += 1
+        if self.counter == 3:
+            self.resp = 'Paquete no encontrado'
+        self.bot.sendtext(str(self.resp), True)
     
     def pkInfo( self, package):
 
@@ -78,6 +90,7 @@ class main:
         
     def handler(self, bot, cmd, args):
         self.bot = bot
+        
 
         try:
             

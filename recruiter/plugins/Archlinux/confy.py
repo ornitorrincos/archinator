@@ -44,18 +44,22 @@ def get(conflc, task):
     
     f = open(conflc, 'r')
     sch = f.readlines()
-    product = sch.index(task) + 1
-    f.close()
-    del f
-    
-    values = ['']
-    for i in range(product, len(sch)):
-        if sch[i] != '\n':
-            values.append(sch[i])
-        if sch[i] == '\n':
-            break
-    
-    
+    try:
+        product = sch.index(task) + 1
+    except ValueError:
+        values = ['', 'None']
+    else:
+        f.close()
+        del f
+        
+        values = ['']
+        for i in range(product, len(sch)):
+            if sch[i] != '\n':
+                values.append(sch[i])
+            if sch[i] == '\n':
+                break
+        
+        
     return values
     
 def exists(location):
