@@ -34,6 +34,9 @@ repos = ('core', 'extra', 'community')
 
 class sync:
     
+    def __init__(self, path):
+        self.path = path
+    
     def refresh(self, repo, mirror):
         '''gets database from mirror'''
         try:
@@ -111,24 +114,19 @@ class sync:
 
 class search:
     
-    def __init__(self):
-        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        
-        if self.path[len('/plugins/Archlinux/'):] == '/plugins/Archlinux':
-            self.plugins_path = self.path[:len('/plugins/Archlinux/')]
-        else:
-            self.plugins_path = self.path + '/plugins/Archlinux/'
+    def __init__(self, path):
+        self.path = path
         
         self.repolist = []
         self.aurlist = []
     
     def sqlsearch(self, repo, package):
         
-        if not os.path.exists(self.plugins_path+'update.lock'):
-            if not os.path.exists(self.plugins_path+repo+'.db'):
+        if not os.path.exists(self.path+'update.lock'):
+            if not os.path.exists(self.path+repo+'.db'):
                 raise RepoError(repo)
             else:
-                self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
+                self.conn = sqlite3.connect(self.path+repo+'.db')
                 self.c = self.conn.cursor()
                 self.t = ('%'+package+'%',)
                 self.c.execute('''select * from packages where ( package like ?)''',
@@ -140,7 +138,7 @@ class search:
             
                 for self.line in self.res:
                     self.repolist.append(self.line[1])
-        if os.path.exists(self.plugins_path+'update.lock') == True:
+        if os.path.exists(self.path+'update.lock') == True:
             self.repolist.append('Actualizando base de datos...')
         return self.repolist
     
@@ -155,26 +153,20 @@ class search:
         return self.aurlist
         
 class info:
-    def __init__(self):
-        self.path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        self.plugins_path = self.path + '/plugins/Archlinux/'
+    def __init__(self, path):
+        self.path = path
         
     def sqlinfo(self, repo, package):
         
-        if self.path[-len('/plugins/Archlinux'):] == '/plugins/Archlinux':
-            self.plugins_path = self.path[:len('/plugins/Archlinux')]
-        else:
-            print self.path
-            self.plugins_path = self.path + '/plugins/Archlinux/'
         
-        if not os.path.exists(self.plugins_path+'/'+repo+'.db'):
-            print self.plugins_path
+        if not os.path.exists(self.path+repo+'.db'):
+            print self.path
             raise RepoError(repo)
         
-        self.conn = sqlite3.connect(self.plugins_path+repo+'.db')
+        self.conn = sqlite3.connect(self.path+repo+'.db')
         self.c = self.conn.cursor()
         
-        self.t (package,)
+        self.t = (package,)
         self.c.execute('''select * from packages where (package like ?)''',
          self.t)
         
@@ -183,7 +175,7 @@ class info:
         self.c.close()
         
         try:
-            self.resp = self.res[3]
+            self.resp = self.res[0][3]
         except IndexError:
             raise PackageError(package)
         else:
@@ -232,7 +224,8 @@ if __name__ == '__main__':
             print search().aurlsearch('kernel26')
         
         elif sys.argv[1] == '-test-info':
-            print info().sqlinfo('core', 'kernel26')
+            c = info(os.path.abspath(sys.argv[0])[:-len('database.py')])
+            print c.sqlinfo('core', 'kernel26')
         
         else:
             print 'wrong command -test for test and -update for update'
