@@ -12,7 +12,8 @@ class main:
                      'silencio'       : self.giveSilence,
                      'googleit'       : self.fuckinGoogleit,
                      'como-preguntar' : self.smartQuestions,
-                     'consejo'        : self.giveConsejo}
+                     'consejo'        : self.giveConsejo,
+                     'claro'          : self.giveClaro}
     
 
     def smartQuestions( self, user ):
@@ -28,12 +29,16 @@ class main:
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
         
     def giveCoffe( self, user ):
-        msg = "da una manta y una taza de café colombiano a %s" % user
+        msg = "da una manta y una taza de café a %s" % user
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
 
     def giveConsejo( self, user ):
         msg = user + " ahómbrese y no sea marica le dije"
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + msg )
+
+    def giveClaro( self, user ):
+        msg = "me extraña dijo la araña mientras tejía su telaraña colgando de una guadaña hasta que llegó una musaraña toda malaentraña y la mató mi estimadísimo %s" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
         
     def givErrormsg( self, user ):
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
