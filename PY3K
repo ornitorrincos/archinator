@@ -1,0 +1,8 @@
+/home/ilcra1989/projects/archinator/recruiter/plugins/Archlinux/feedparser.py:69: DeprecationWarning: the sgmllib module has been removed in Python 3.0
+  import sgmllib, re, sys, copy, urlparse, time, rfc822, types, cgi, urllib, urllib2
+  /home/ilcra1989/projects/archinator/recruiter/plugins/Archlinux/feedparser.py:69: DeprecationWarning: in 3.x, rfc822 has been removed in favor of the email package
+    import sgmllib, re, sys, copy, urlparse, time, rfc822, types, cgi, urllib, urllib2
+    /usr/lib/python2.6/site-packages/libxml2.py:685: SyntaxWarning: tuple parameter unpacking has been removed in 3.x
+      def _xmlTextReaderErrorFunc((f,arg),msg,severity,locator):
+      {'JOIN': []}
+      
