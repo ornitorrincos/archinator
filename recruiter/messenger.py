@@ -10,8 +10,8 @@ class threader(threading.Thread):
         
     def run( self ):
         try:
-            if re.match(r':.*!.*PRIVMSG\s.*\s:!(.*)', self.msg, re.DOTALL):
-                realMessage = (re.compile(r':(.*)!.*PRIVMSG\s(.*)\s:!(.*)')).findall(self.msg)[0]
+            if re.match(r':.*!.*PRIVMSG\s.*\s:\@(.*)', self.msg, re.DOTALL):
+                realMessage = (re.compile(r':(.*)!.*PRIVMSG\s(.*)\s:\@(.*)')).findall(self.msg)[0]
             else:
                 realMessage = (re.compile(r':(.*)!.*PRIVMSG\s(.*)\s:' + NICK + '\s(.*)')).findall(self.msg)[0]
 

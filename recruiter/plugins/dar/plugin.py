@@ -13,6 +13,9 @@ class main:
                      'googleit'       : self.fuckinGoogleit,
                      'como-preguntar' : self.smartQuestions,
                      'consejo'        : self.giveConsejo,
+                     'patada'         : self.givePatada,
+                     'consuelo'       : self.giveConsuelo,
+                     'galletitas'     : self.giveCookies,
                      'claro'          : self.giveClaro}
     
 
@@ -43,14 +46,26 @@ class main:
     def givErrormsg( self, user ):
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
         
+    def givePatada( self, user ):
+        msg = "le da una patada en las bolas a %s" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
+        
+    def giveConsuelo( self, user ):
+        msg = "le da palmaditas a  %s" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
+
+    def giveCookies( self, user ):
+        msg = "da unas galletitas de chocolate a %s con un vaso de leche" % user
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
+
     def handler(self, bot, cmd, args):
         self.bot = bot
         
         args = args.split()
         
-        if args[1] in self.bot.actions:
-            self.bot.reqUser = args[0]
-            self.bot.actions[args[1]].handler( self.bot, args[1], (' ').join(args[2:]))
+        if args[0] in self.bot.actions:
+            self.bot.reqUser = args[1]
+            self.bot.actions[args[0]].handler( self.bot, args[0], (' ').join(args[2:]))
         else:
-            self.reqs[args[1]](args[0])
+            self.reqs[args[0]](args[1])
 

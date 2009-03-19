@@ -11,7 +11,7 @@ PASSWORD='password' # The nickserv password
 IDENT='prueba'
 REALNAME='prueba'
 OWNERS = ['owner'] #The bot owner's nick
-CHANNELS=['#archlinux-ve','#archlinux-es','#php-ve']
+CHANNELS=['#prueba1234']
 
 
 #PLUGINS
