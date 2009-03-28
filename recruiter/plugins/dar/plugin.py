@@ -44,7 +44,7 @@ class main:
         self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :\001ACTION %s\001' % msg )
         
     def givErrormsg( self, user ):
-        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://pics.ipostr.com/pics/pic_12047688966944.jpg \n' )
+        self.bot.sendtext( 'PRIVMSG ' + self.bot.reqChannel + ' :' + user + ' ➜ http://ipo.totfarm.com/pics/pic_11995818968645.jpg' )
         
     def givePatada( self, user ):
         msg = "le da una patada en las bolas a %s" % user
