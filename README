@@ -1,4 +1,4 @@
-archinator, the bot from #archlinux-es on freenode
+Archinator, was the old bot (dead right now) from #archlinux-es on freenode
 
 main development happens on sqlite branch, here are backported some working 
 features.

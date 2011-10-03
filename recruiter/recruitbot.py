@@ -10,7 +10,7 @@ from config import *
 
 class rEcRuItEr:
 	
-	def __init__( self ): 
+	def __init__( self ):
 		self.socket = ""
 		self.botowners = OWNERS
 		self.botnick  = NICK
@@ -53,10 +53,10 @@ class rEcRuItEr:
 		    	continue
 		    print '> '+msg.strip()
 			
-		    if msg.find('JOIN') != -1 and self.listeners['JOIN']: 
+		    if msg.find('JOIN') != -1 and self.listeners['JOIN']:
 		    	for listener in self.listeners['JOIN']:
 		    		listener( msg )
-		    if re.match(r'.*(PRIVMSG)\s(.*)\s:' + NICK, msg) != -1: 
+		    if re.match(r'.*(PRIVMSG)\s(.*)\s:' + NICK, msg) != -1:
 		    	messenger.threader( self, msg).start()
 		    	
 	def restart( self, args ):
